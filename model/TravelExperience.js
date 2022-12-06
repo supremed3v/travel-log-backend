@@ -77,26 +77,6 @@ const travelExperienceSchema = new mongoose.Schema({
     {
       type: String,
       required: true,
-      enum: {
-        values: [
-          "Adventure",
-          "Beach",
-          "Cultural",
-          "Family",
-          "Food",
-          "Honeymoon",
-          "Luxury",
-          "Nature",
-          "Romantic",
-          "Shopping",
-          "Sightseeing",
-          "Solo",
-          "Spa",
-          "Sports",
-          "Wildlife",
-        ],
-        message: "Please select correct category for travel experience",
-      },
     },
   ],
 });
