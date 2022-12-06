@@ -1,5 +1,5 @@
 const express = require("express");
-require("dotenv").config();
+require("dotenv").config({ path: "./config/config.env" });
 const connectDB = require("./config/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -19,11 +19,15 @@ app.get("/", (req, res) => res.send("API Running"));
 
 // Define Routes
 
-// app.use("/api/v1", require("./routes/auth"));
+const user = require("./routes/auth");
+
+app.use("/api/v1", user);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const server = app.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`)
+);
 
 // Handle unhandled promise rejections
 
