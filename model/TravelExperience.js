@@ -1,12 +1,6 @@
 const mongoose = require("mongoose");
 
 const travelExperienceSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, "Please enter a title"],
-    trim: true,
-    maxLength: [100, "Title cannot exceed 100 characters"],
-  },
   description: {
     type: String,
     required: [true, "Please enter a description"],

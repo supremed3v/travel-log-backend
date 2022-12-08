@@ -1,4 +1,4 @@
-const TravelExperience = require("../models/TravelExperience");
+const TravelExperience = require("../model/TravelExperience");
 const ErrorHandler = require("../middlewares/error");
 const catchAsyncErrors = require("../middlewares/asyncErrorHandler");
 
