@@ -1,6 +1,15 @@
 const TravelExperience = require("../model/TravelExperience");
-const ErrorHandler = require("../middlewares/error");
 const catchAsyncErrors = require("../middlewares/asyncErrorHandler");
+const cloudinary = require("cloudinary");
+
+class ErrorHandler extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
 exports.createTravelExperience = catchAsyncErrors(async (req, res, next) => {
   let images = [];
@@ -24,11 +33,37 @@ exports.createTravelExperience = catchAsyncErrors(async (req, res, next) => {
   }
 
   req.body.images = imagesLinks;
-  req.body.user = req.user.id;
 
   const travelExperience = await TravelExperience.create(req.body);
 
   res.status(201).json({
+    success: true,
+    travelExperience,
+  });
+});
+
+exports.singleUserExperience = catchAsyncErrors(async (req, res, next) => {
+  const id = req.params.id;
+  const travelExperiences = await TravelExperience.find({ user: id });
+
+  if (!travelExperiences) {
+    return next(new ErrorHandler("Travel experiences not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    travelExperiences,
+  });
+});
+
+exports.findTravelExperience = catchAsyncErrors(async (req, res, next) => {
+  const travelExperience = await TravelExperience.find();
+
+  if (!travelExperience) {
+    return next(new ErrorHandler("Travel experience not found", 404));
+  }
+
+  res.status(200).json({
     success: true,
     travelExperience,
   });

@@ -1,7 +1,15 @@
 const User = require("../model/UserModel");
-const ErrorHandler = require("../middlewares/error");
 const catchAsyncErrors = require("../middlewares/asyncErrorHandler");
 const sendToken = require("../utils/jwt");
+
+class ErrorHandler extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
