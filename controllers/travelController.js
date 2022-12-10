@@ -57,12 +57,24 @@ exports.singleUserExperience = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.findTravelExperience = catchAsyncErrors(async (req, res, next) => {
-  const travelExperience = await TravelExperience.find();
+  const travelExperiences = await TravelExperience.find();
 
-  if (!travelExperience) {
+  if (!travelExperiences) {
     return next(new ErrorHandler("Travel experience not found", 404));
   }
 
+  res.status(200).json({
+    success: true,
+    travelExperiences,
+  });
+});
+
+exports.getSingleExperiece = catchAsyncErrors(async (req, res, next) => {
+  const id = req.params.id;
+  const travelExperience = await TravelExperience.findById(id);
+  if (!travelExperience) {
+    return next(new ErrorHandler("Travel experience not found", 404));
+  }
   res.status(200).json({
     success: true,
     travelExperience,
