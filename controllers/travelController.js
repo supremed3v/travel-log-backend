@@ -80,3 +80,39 @@ exports.getSingleExperiece = catchAsyncErrors(async (req, res, next) => {
     travelExperience,
   });
 });
+
+exports.addComment = catchAsyncErrors(async (req, res, next) => {
+  const { comment, rating, postId } = req.body;
+  const user = req.user._id;
+  const review = {
+    user,
+    name: req.user.name,
+    comment,
+    rating: Number(rating),
+  };
+  const travelExperience = await TravelExperience.findById(postId);
+  if (!travelExperience) {
+    return next(new ErrorHandler("Travel experience not found", 404));
+  }
+
+  const isReviewed = travelExperience.review.find(
+    (r) => r.user.toString() === user.toString()
+  );
+  if (isReviewed) {
+    travelExperience.review.forEach((review) => {
+      if (review.user.toString() === user.toString()) {
+        review.comment = comment;
+        review.rating = rating;
+      }
+    });
+  } else {
+    travelExperience.review.push(review);
+    travelExperience.numOfReviews = travelExperience.review.length;
+  }
+  let avg = 0;
+  travelExperience.rating = avg / travelExperience.review.length;
+  await travelExperience.save({ validateBeforeSave: false });
+  res.status(200).json({
+    success: true,
+  });
+});
